@@ -1,67 +1,87 @@
-2D Scattered Data Interpolation using Bilinear Scheme
+# 2D Scattered Data Interpolation using Bilinear Scheme
 
-This project implements bilinear interpolation of scattered 2D data points onto a structured mesh grid. The method used is a form of **Charge Deposition using Cloud-in-a-Cell (CIC)** — a widely used technique in particle-mesh simulations in physics and high performance computing (HPC).
+This project implements **bilinear interpolation** of scattered 2D data points onto a structured mesh grid using a method inspired by **Cloud-in-a-Cell (CIC)** — a widely adopted approach in particle-mesh simulations within physics and high-performance computing (HPC).
 
-It is modeled as a **"Similar Charge in Cloud"** problem, where values (e.g., charges or mass) from unstructured positions are spread over a structured computational domain. This concept is critical for efficient and accurate numerical simulation in various scientific and engineering applications.
+The problem is modeled as a **"Similar Charge in Cloud"** scenario, where values (e.g., charge, mass) from unstructured positions are deposited onto a structured computational domain. This concept is fundamental for efficient and accurate numerical simulations in scientific and engineering applications.
 
-## Problem Description
+---
 
-Given a set of scattered points \( (x_i, y_i, f_i) \), where \( f_i = 1 \), the objective is to interpolate the function values onto a structured grid of size \( M \times M \) using **bilinear interpolation**, based on the **CIC (Cloud-in-a-Cell)** method.
+## 📌 Problem Description
 
-Each scattered point contributes to the values of the four surrounding grid points based on its relative distance to them.
+Given a set of scattered points $(x_i, y_i, f_i)$, where $f_i = 1$, the goal is to interpolate function values onto a structured grid of size $M \times M$ using **bilinear interpolation** following the **CIC (Cloud-in-a-Cell)** method.
 
-## Files
+Each scattered point contributes to the values of the four nearest grid points based on its relative distance to them.
 
-- `PIC_interpolation.c`:  
-  Serial implementation for bilinear interpolation. Can be extended to parallel code using OpenMP or MPI.
+---
 
-- `input_fileMaker.c`:  
-  Utility to generate input binary file `input.bin` with random scattered points in a unit domain.
+## 📁 Project Files
 
-## Applications
+* **`PIC_interpolation.c`**
+  Serial implementation of the bilinear interpolation algorithm. Can be extended for parallelism using OpenMP or MPI.
 
-This interpolation scheme has widespread applications:
+* **`input_fileMaker.c`**
+  Utility to generate a binary input file `input.bin` with randomly distributed scattered points in the unit square domain.
 
-1. **Computer Graphics and 3D Modeling**  
-   • Used to generate smooth surfaces from scattered 3D points, such as those obtained from 3D scanning (e.g., LIDAR or photogrammetry).  
-   • Example: Turning a point cloud of a scanned object into a mesh for rendering or animation.
+---
 
-2. **Scientific Visualization**  
-   • In fields like meteorology or oceanography, scattered data points (e.g., temperature or pressure readings from sensors) are interpolated onto a mesh to visualize continuous fields over a region.
+## 🧠 Applications
 
-3. **Finite Element Analysis (FEA)**  
-   • Engineers use this in simulations (e.g., structural analysis, fluid dynamics) to map scattered data (like material properties or experimental measurements) onto a structured mesh for numerical solving.
+This interpolation scheme finds broad application in the following domains:
 
-4. **Medical Imaging**  
-   • Reconstructing surfaces or volumes from scattered data points, such as creating a 3D model of an organ from MRI or CT scan points.
+1. **Computer Graphics & 3D Modeling**
 
-5. **Machine Learning and Data Science**  
-   • When dealing with sparse or unevenly sampled data, this scheme helps create a continuous representation for tasks like regression, visualization, or simulation.
+   * Smooth surface generation from point clouds (e.g., from LIDAR or photogrammetry).
+   * Example: Converting a scanned 3D object into a renderable mesh.
 
-## Cloud-in-a-Cell (CIC) – Charge Deposition
+2. **Scientific Visualization**
 
-For each scattered point within a grid cell (with corner points \((X_i, Y_j)\), \((X_{i+1}, Y_j)\), etc.), the function value is deposited onto the grid using bilinear weights:
+   * Interpolating sensor data (e.g., temperature, pressure) for visualization in fields like meteorology or oceanography.
 
-- \( w_{i,j} = (1 - dx)(1 - dy) \)  
-- \( w_{i+1,j} = dx(1 - dy) \)  
-- \( w_{i,j+1} = (1 - dx)dy \)  
-- \( w_{i+1,j+1} = dxdy \)
+3. **Finite Element Analysis (FEA)**
+
+   * Mapping scattered experimental or physical data onto a structured mesh for numerical simulations (e.g., stress analysis, CFD).
+
+4. **Medical Imaging**
+
+   * Reconstructing anatomical surfaces or volumes from scattered MRI/CT data.
+
+5. **Machine Learning & Data Science**
+
+   * Transforming sparse or uneven data into continuous grids for regression, analysis, or modeling tasks.
+
+---
+
+## 🧮 Cloud-in-a-Cell (CIC) – Charge Deposition
+
+Each scattered point within a grid cell (bounded by corners $(X_i, Y_j)$, $(X_{i+1}, Y_j)$, etc.) contributes to surrounding grid points using bilinear weights:
+
+$$
+\begin{aligned}
+w_{i,j} &= (1 - dx)(1 - dy) \\
+w_{i+1,j} &= dx(1 - dy) \\
+w_{i,j+1} &= (1 - dx)dy \\
+w_{i+1,j+1} &= dxdy
+\end{aligned}
+$$
 
 Where:
 
-- \( dx = \frac{x_i - X_i}{\Delta x} \)  
-- \( dy = \frac{y_i - Y_j}{\Delta y} \)
+$$
+dx = \frac{x_i - X_i}{\Delta x}, \quad dy = \frac{y_i - Y_j}{\Delta y}
+$$
 
-These weights ensure smooth interpolation and conservation properties across the grid.
+These weights ensure smooth, conservative deposition across the grid.
 
-## Build and Run
+---
+
+## ⚙️ Build and Run
 
 ### 1. Compile
 
 ```bash
 gcc input_fileMaker.c -o input_gen
 gcc PIC_interpolation.c -o interpolate -lm
-````
+```
 
 ### 2. Generate Input Data
 
@@ -69,7 +89,7 @@ gcc PIC_interpolation.c -o interpolate -lm
 ./input_gen
 ```
 
-This creates the file `input.bin` containing the scattered data.
+Generates `input.bin` containing scattered point data.
 
 ### 3. Run Interpolation
 
@@ -79,38 +99,44 @@ This creates the file `input.bin` containing the scattered data.
 
 ### Output
 
-The program outputs interpolated values on a structured grid. Output format depends on your implementation (e.g., binary or text).
+The program outputs interpolated values over a structured grid. Output format may vary (binary/text), based on implementation.
 
-## Test Configurations
+---
 
-Use the following setups for testing scalability and performance:
+## 🧪 Test Configurations
 
-| Config | Nx   | Ny  | Points (Million) | Maxiter |
-| ------ | ---- | --- | ---------------- | ------- |
-| (a)    | 250  | 100 | 0.9              | 10      |
-| (b)    | 250  | 100 | 5.0              | 10      |
-| (c)    | 500  | 200 | 3.6              | 10      |
-| (d)    | 500  | 200 | 20.0             | 10      |
-| (e)    | 1000 | 400 | 14.0             | 10      |
+Suggested configurations to evaluate performance and scalability:
 
-## Performance and Optimization Goals
+| Config | Nx   | Ny  | Points (Million) | Max Iterations |
+| ------ | ---- | --- | ---------------- | -------------- |
+| (a)    | 250  | 100 | 0.9              | 10             |
+| (b)    | 250  | 100 | 5.0              | 10             |
+| (c)    | 500  | 200 | 3.6              | 10             |
+| (d)    | 500  | 200 | 20.0             | 10             |
+| (e)    | 1000 | 400 | 14.0             | 10             |
 
-This project encourages not just accuracy but **high-performance parallel computation**:
+---
 
-* Implement and benchmark parallel versions (e.g., OpenMP, SIMD, MPI)
-* Measure:
+## 🚀 Performance and Optimization Goals
+
+This project not only emphasizes accuracy but also aims for **high-performance parallel computation**. Optimization directions include:
+
+* Implement parallel versions (OpenMP, MPI, SIMD)
+* Benchmark performance:
 
   * Execution time
-  * Speedup vs thread count
-  * Cache performance (valgrind, callgrind, Intel VTune)
+  * Speedup vs. thread count
+  * Cache behavior (Valgrind/Callgrind, Intel VTune)
 * Evaluate:
 
   * Impact of hyperthreading
   * Thread scheduling strategies
-  * Effect of data locality
+  * Effects of memory locality
 
-## Notes
+---
 
-* Domain size is fixed to \[0, 1] × \[0, 1]
-* Make sure interpolation results are validated against reference output
-* Avoid race conditions in parallel implementations
+## 📝 Notes
+
+* The simulation domain is fixed to $[0, 1] \times [0, 1]$.
+* Always validate interpolation results against a reference or analytical benchmark.
+* Take care to avoid **race conditions** when parallelizing the algorithm.
