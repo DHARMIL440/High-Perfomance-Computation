@@ -1,7 +1,4 @@
-Here’s the updated `README.md` code with **"Charge deposition using Cloud-in-a-Cell (CIC)"** explicitly mentioned in the introduction and context. This version integrates your academic project purpose with scientific terminology and real-world relevance:
-
-````markdown
-# 2D Scattered Data Interpolation using Bilinear Scheme
+2D Scattered Data Interpolation using Bilinear Scheme
 
 This project implements bilinear interpolation of scattered 2D data points onto a structured mesh grid. The method used is a form of **Charge Deposition using Cloud-in-a-Cell (CIC)** — a widely used technique in particle-mesh simulations in physics and high performance computing (HPC).
 
